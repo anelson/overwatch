@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<packet>
+  <proto name="geninfo" pos="0" showname="General information" size="111">
+    <field name="num" pos="0" show="1" showname="Number" value="1" size="111"/>
+    <field name="len" pos="0" show="111" showname="Packet Length" value="6f" size="111"/>
+    <field name="caplen" pos="0" show="111" showname="Captured Length" value="6f" size="111"/>
+    <field name="timestamp" pos="0" show="Jan 21, 2007 12:19:30.293292000" showname="Captured Time" value="1169399970.293292000" size="111"/>
+  </proto>
+  <proto name="frame" showname="Frame 1 (111 bytes on wire, 111 bytes captured)" size="111" pos="0">
+    <field name="frame.time" showname="Arrival Time: Jan 21, 2007 12:19:30.293292000" size="0" pos="0" show="Jan 21, 2007 12:19:30.293292000"/>
+    <field name="frame.time_delta" showname="Time delta from previous packet: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.time_relative" showname="Time since reference or first frame: 0.000000000 seconds" size="0" pos="0" show="0.000000000"/>
+    <field name="frame.number" showname="Frame Number: 1" size="0" pos="0" show="1"/>
+    <field name="frame.pkt_len" showname="Packet Length: 111 bytes" size="0" pos="0" show="111"/>
+    <field name="frame.cap_len" showname="Capture Length: 111 bytes" size="0" pos="0" show="111"/>
+    <field name="frame.marked" showname="Frame is marked: False" size="0" pos="0" show="0"/>
+    <field name="frame.protocols" showname="Protocols in frame: wlan" size="0" pos="0" show="wlan"/>
+  </proto>
+  <proto name="wlan" showname="IEEE 802.11" size="24" pos="0">
+    <field name="wlan.fc.type_subtype" showname="Type/Subtype: Beacon frame (8)" size="1" pos="0" show="8" value="80"/>
+    <field name="wlan.fc" showname="Frame Control: 0x0080 (Normal)" size="2" pos="0" show="0x0080" value="8000">
+      <field name="wlan.fc.version" showname="Version: 0" size="1" pos="0" show="0" value="80"/>
+      <field name="wlan.fc.type" showname="Type: Management frame (0)" size="1" pos="0" show="0" value="80"/>
+      <field name="wlan.fc.subtype" showname="Subtype: 8" size="1" pos="0" show="8" value="80"/>
+      <field name="wlan.flags" showname="Flags: 0x0" size="1" pos="1" show="0x00" value="00">
+        <field name="wlan.fc.ds" showname="DS status: Not leaving DS or network is operating in AD-HOC mode (To DS: 0 From DS: 0) (0x00)" size="1" pos="1" show="0x00" value="00"/>
+        <field name="wlan.fc.tods" showname=".... ...0 = To DS: Frame is not entering DS" hide="yes" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.fromds" showname=".... ..0. = From DS: Frame is not exiting DS" hide="yes" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.frag" showname=".... .0.. = More Fragments: This is the last fragment" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.retry" showname=".... 0... = Retry: Frame is not being retransmitted" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.pwrmgt" showname="...0 .... = PWR MGT: STA will stay up" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.moredata" showname="..0. .... = More Data: No data buffered" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.protected" showname=".0.. .... = Protected flag: Data is not protected" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+        <field name="wlan.fc.order" showname="0... .... = Order flag: Not strictly ordered" size="1" pos="1" show="0" value="0" unmaskedvalue="00"/>
+      </field>
+    </field>
+    <field name="wlan.duration" showname="Duration: 0" size="2" pos="2" show="0" value="0000"/>
+    <field name="wlan.da" showname="Destination address: Broadcast (ff:ff:ff:ff:ff:ff)" size="6" pos="4" show="ff:ff:ff:ff:ff:ff" value="ffffffffffff"/>
+    <field name="wlan.sa" showname="Source address: Cisco-Li_cf:15:6c (00:14:bf:cf:15:6c)" size="6" pos="10" show="00:14:bf:cf:15:6c" value="0014bfcf156c"/>
+    <field name="wlan.addr" showname="Source or Destination address: Broadcast (ff:ff:ff:ff:ff:ff)" hide="yes" size="6" pos="4" show="ff:ff:ff:ff:ff:ff" value="ffffffffffff"/>
+    <field name="wlan.addr" showname="Source or Destination address: Cisco-Li_cf:15:6c (00:14:bf:cf:15:6c)" hide="yes" size="6" pos="10" show="00:14:bf:cf:15:6c" value="0014bfcf156c"/>
+    <field name="wlan.bssid" showname="BSS Id: Cisco-Li_cf:15:6c (00:14:bf:cf:15:6c)" size="6" pos="16" show="00:14:bf:cf:15:6c" value="0014bfcf156c"/>
+    <field name="wlan.frag" showname="Fragment number: 0" size="2" pos="22" show="0" value="503d"/>
+    <field name="wlan.seq" showname="Sequence number: 981" size="2" pos="22" show="981" value="503d"/>
+  </proto>
+  <proto name="wlan_mgt" showname="IEEE 802.11 wireless LAN management frame" size="87" pos="24">
+    <field name="wlan_mgt.fixed.all" showname="Fixed parameters (12 bytes)" size="12" pos="24" show="12" value="8761f8137901000064003104">
+      <field name="wlan_mgt.fixed.timestamp" showname="Timestamp: 0x0000017913F86187" size="8" pos="24" show="0x0000017913F86187" value="8761f81379010000"/>
+      <field name="wlan_mgt.fixed.beacon" showname="Beacon Interval: 0.102400 [Seconds]" size="2" pos="32" show="0.1024" value="6400"/>
+      <field name="wlan_mgt.fixed.capabilities" showname="Capability Information: 0x0431" size="2" pos="34" show="0x0431" value="3104">
+        <field name="wlan_mgt.fixed.capabilities.ess" showname=".... .... .... ...1 = ESS capabilities: Transmitter is an AP" size="2" pos="34" show="1" value="1" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.ibss" showname=".... .... .... ..0. = IBSS status: Transmitter belongs to a BSS" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.cfpoll.ap" showname=".... ..0. .... 00.. = CFP participation capabilities: No point coordinator at AP (0x0000)" size="2" pos="34" show="0x0000" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.privacy" showname=".... .... ...1 .... = Privacy: AP/STA can support WEP" size="2" pos="34" show="1" value="1" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.preamble" showname=".... .... ..1. .... = Short Preamble: Short preamble allowed" size="2" pos="34" show="1" value="1" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.pbcc" showname=".... .... .0.. .... = PBCC: PBCC modulation not allowed" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.agility" showname=".... .... 0... .... = Channel Agility: Channel agility not in use" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.spec_man" showname=".... ...0 .... .... = Spectrum Management: dot11SpectrumManagementRequired FALSE" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.short_slot_time" showname=".... .1.. .... .... = Short Slot Time: Short slot time in use" size="2" pos="34" show="1" value="1" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.apsd" showname=".... 0... .... .... = Automatic Power Save Delivery: apsd not implemented" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.dsss_ofdm" showname="..0. .... .... .... = DSSS-OFDM: DSSS-OFDM modulation not allowed" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.del_blk_ack" showname=".0.. .... .... .... = Delayed Block Ack: delayed block ack not implented" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+        <field name="wlan_mgt.fixed.capabilities.imm_blk_ack" showname="0... .... .... .... = Immediate Block Ack: immediate block ack not implented" size="2" pos="34" show="0" value="0" unmaskedvalue="3104"/>
+      </field>
+    </field>
+    <field name="wlan_mgt.tagged.all" showname="Tagged parameters (75 bytes)" size="75" pos="36" show="75" value="00086e6f5f7769726573010882848b9624b0486c0301060504000100002a01042f010432048c129860dd060010180201f0dd180050f20101000050f20401000050f20401000050f2020000">
+      <field show="SSID parameter set: &quot;no_wires&quot;" size="10" pos="36" value="00086e6f5f7769726573">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 0 (SSID parameter set)" size="1" pos="36" show="0" value="00"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 8" size="1" pos="37" show="8" value="08"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: no_wires" size="8" pos="38" show="no_wires" value="6e6f5f7769726573"/>
+      </field>
+      <field show="Supported Rates: 1.0(B) 2.0(B) 5.5(B) 11.0(B) 18.0 24.0(B) 36.0 54.0 " size="10" pos="46" value="010882848b9624b0486c">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 1 (Supported Rates)" size="1" pos="46" show="1" value="01"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 8" size="1" pos="47" show="8" value="08"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Supported rates: 1.0(B) 2.0(B) 5.5(B) 11.0(B) 18.0 24.0(B) 36.0 54.0  [Mbit/sec]" size="8" pos="48" show="Supported rates: 1.0(B) 2.0(B) 5.5(B) 11.0(B) 18.0 24.0(B) 36.0 54.0  [Mbit/sec]" value="82848b9624b0486c"/>
+      </field>
+      <field show="DS Parameter set: Current Channel: 6" size="3" pos="56" value="030106">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 3 (DS Parameter set)" size="1" pos="56" show="3" value="03"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 1" size="1" pos="57" show="1" value="01"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Current Channel: 6" size="1" pos="58" show="Current Channel: 6" value="06"/>
+      </field>
+      <field show="(TIM) Traffic Indication Map: DTIM 0 of 1 bitmap empty" size="6" pos="59" value="050400010000">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 5 ((TIM) Traffic Indication Map)" size="1" pos="59" show="5" value="05"/>
+        <field name="wlan_mgt.tim.length" showname="TIM length: 4" size="1" pos="60" show="4" value="04"/>
+        <field name="wlan_mgt.tim.dtim_count" showname="DTIM count: 0" size="1" pos="61" show="0" value="00"/>
+        <field name="wlan_mgt.tim.dtim_period" showname="DTIM period: 1" size="1" pos="62" show="1" value="01"/>
+        <field name="wlan_mgt.tim.bmapctl" showname="Bitmap Control: 0x00 (mcast:0, bitmap offset 0)" size="1" pos="63" show="0x00" value="00"/>
+      </field>
+      <field show="ERP Information: no Non-ERP STAs, do not use protection, long preambles" size="3" pos="65" value="2a0104">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 42 (ERP Information)" size="1" pos="65" show="42" value="2a"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 1" size="1" pos="66" show="1" value="01"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: ERP info: 0x4 (no Non-ERP STAs, do not use protection, long preambles)" size="1" pos="67" show="ERP info: 0x4 (no Non-ERP STAs, do not use protection, long preambles)" value="04"/>
+      </field>
+      <field show="ERP Information: no Non-ERP STAs, do not use protection, long preambles" size="3" pos="68" value="2f0104">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 47 (ERP Information)" size="1" pos="68" show="47" value="2f"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 1" size="1" pos="69" show="1" value="01"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: ERP info: 0x4 (no Non-ERP STAs, do not use protection, long preambles)" size="1" pos="70" show="ERP info: 0x4 (no Non-ERP STAs, do not use protection, long preambles)" value="04"/>
+      </field>
+      <field show="Extended Supported Rates: 6.0(B) 9.0 12.0(B) 48.0 " size="6" pos="71" value="32048c129860">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 50 (Extended Supported Rates)" size="1" pos="71" show="50" value="32"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 4" size="1" pos="72" show="4" value="04"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Supported rates: 6.0(B) 9.0 12.0(B) 48.0  [Mbit/sec]" size="4" pos="73" show="Supported rates: 6.0(B) 9.0 12.0(B) 48.0  [Mbit/sec]" value="8c129860"/>
+      </field>
+      <field show="Vendor Specific: Broadcom" size="8" pos="77" value="dd060010180201f0">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 221 (Vendor Specific)" size="1" pos="77" show="221" value="dd"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 6" size="1" pos="78" show="6" value="06"/>
+        <field name="wlan_mgt.tag.oui" showname="Vendor: Broadcom" size="3" pos="79" show="00:00:00" value="001018"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Not interpreted" size="3" pos="82" show="Not interpreted" value="0201f0"/>
+      </field>
+      <field show="Vendor Specific: WPA" size="26" pos="85" value="dd180050f20101000050f20401000050f20401000050f2020000">
+        <field name="wlan_mgt.tag.number" showname="Tag Number: 221 (Vendor Specific)" size="1" pos="85" show="221" value="dd"/>
+        <field name="wlan_mgt.tag.length" showname="Tag length: 24" size="1" pos="86" show="24" value="18"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: WPA IE, type 1, version 1" size="6" pos="87" show="WPA IE, type 1, version 1" value="0050f2010100"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Multicast cipher suite: AES (CCM)" size="4" pos="93" show="Multicast cipher suite: AES (CCM)" value="0050f204"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: # of unicast cipher suites: 1" size="2" pos="97" show="# of unicast cipher suites: 1" value="0100"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Unicast cipher suite 1: AES (CCM)" size="4" pos="99" show="Unicast cipher suite 1: AES (CCM)" value="0050f204"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: # of auth key management suites: 1" size="2" pos="103" show="# of auth key management suites: 1" value="0100"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: auth key management suite 1: PSK" size="4" pos="105" show="auth key management suite 1: PSK" value="0050f202"/>
+        <field name="wlan_mgt.tag.interpretation" showname="Tag interpretation: Not interpreted" size="2" pos="109" show="Not interpreted" value="0000"/>
+      </field>
+    </field>
+  </proto>
+</packet>

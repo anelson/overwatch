@@ -1,0 +1,70 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+	Version="10.0"
+	VendorName="SlickEdit"
+	WorkingDir=".">
+	<Config
+		Name="Release"
+		OutputFile=""
+		CompilerConfigName="Latest Version">
+		<Menu>
+			<Target
+				Name="Execute"
+				MenuCaption="E&amp;xecute"
+				SaveOption="SaveAll"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1">
+				<Exec CmdLine="ruby -I lib -w bin/overwatch.rb"/>
+			</Target>
+			<Target
+				Name="Test"
+				MenuCaption="&amp;Test"
+				RunFromDir="%rp"
+				CaptureOutputWith="ProcessBuffer"
+				ClearProcessBuffer="1"
+				SaveOption="SaveAll">
+				<Exec CmdLine="rake -I lib test"/>
+			</Target>
+		</Menu>
+	</Config>
+	<CustomFolders>
+		<Folder
+			Name="Source Files"
+			Filters="*.c;*.C;*.cc;*.cpp;*.cp;*.cxx;*.prg;*.pas;*.dpr;*.asm;*.s;*.bas;*.java;*.cs;*.sc;*.e;*.cob;*.html;*.rc;*.tcl;*.py;*.pl"/>
+		<Folder
+			Name="Header Files"
+			Filters="*.h;*.H;*.hh;*.hpp;*.hxx;*.inc;*.sh;*.cpy;*.if"/>
+		<Folder
+			Name="Resource Files"
+			Filters="*.ico;*.cur;*.dlg"/>
+		<Folder
+			Name="Bitmaps"
+			Filters="*.bmp"/>
+		<Folder
+			Name="Other Files"
+			Filters=""/>
+	</CustomFolders>
+	<Files AutoFolders="DirectoryView">
+		<Folder Name="bin">
+			<F N="bin/overwatch.rb"/>
+		</Folder>
+		<Folder Name="lib">
+			<Folder Name="overwatch">
+				<F N="lib/overwatch/pdml_extractor.rb"/>
+				<F N="lib/overwatch/pdml_packet_source.rb"/>
+				<F N="lib/overwatch/wireshark_error.rb"/>
+			</Folder>
+			<F N="lib/overwatch.rb"/>
+		</Folder>
+		<Folder Name="test">
+			<F N="test/all_tests.rb"/>
+			<F N="test/pdml_extractor_test.rb"/>
+			<F N="test/pdml_packet_source_extractor_test.rb"/>
+			<F N="test/pdml_packet_source_test.rb"/>
+			<F N="test/pdml_packet_source_test_cruft.rb"/>
+			<F N="test/test_helper.rb"/>
+		</Folder>
+		<F N="rakefile.rb"/>
+	</Files>
+</Project>
