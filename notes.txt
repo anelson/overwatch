@@ -1,0 +1,101 @@
+HTTP dissector isn't all it's cracked up to be.  See random_web_browsing_session.cap around frame 18347.  It seems due to some packet loss the HTTP dissector got confused and couldn't pick up the HTTP session (this capture was taken right before I had to bounce my shitty FiOS router, so the packet loss was probably due to its full NAT table).  Thus, if one relies on the HTTP dissector to detect this particular HTTP request/response pair, one would miss it.  At the same time, the more primitive TCP-based 'Follow Conversation' feature in Wireshark picks up the exchange fine.  It would well and truly suck to have to abandon the HTTP dissector.
+
+In the cases where the HTTP dissector is available, no property is available to get the raw payload.  The getValueForField method adapted from the tshark sources explicitly returns NULL for protocol elements, and when the payload is a recognized type like JPEG it gets its own dissector which also doesn't expose the raw data.
+
+On the other hand, when the TCP payload isn't picked up by another dissector, there is a no-name field with a display value indicating "TCP segment data (n bytes)", the value of which is the raw payload.  Lame.
+
+It remains to be seen how much of an issue this will really be.  WLANs can be expected to suffer more packet loss than wired lans due to multipath loss and interference, but on the whole perhaps this will not be a big deal.  I may adapt dumpcap to look at tcp/80 traffic and see what proportion of non-zero-length TCP segments to or from that port are missing the http protocol info.
+
+UPDATE: In the packet which represents the reassembled fragments, the tcp.segments field contains one record for each TCP segment used to compose the final packet (note the reassembled packet data seems to be bolted on to whatever the last segment is, and not added as a stand-alone packet).
+
+According to the wireshark code, in each fragment packet other than the final one there should be a tcp.reassembled_in field that references the final segment containing the reassembled packet, but I don't see it in my dumpcap output.
+
+Running tshark against my test cap file didn't produce the tcp.reassembled_in field either.  Upon reflection, in order for a dissector to know this, it would have to read forward through the capture until it found the subsequent fragments, which the tshark code upon which rcapdissector was modeled doesn't do, but it's clear the wireshark GUI does make two passes, if for no other reason than to display the protocol summary.  For performance reasons I can't afford to do two passes, so I'll have to adapt the code to go back and remove entries for partial fragments once the reassembled packet is encountered.  Oh well.
+
+As for getting the raw data, I've modified the Field.value accessor logic so protocol fields also return data.  This in effect returns the entire block of data associated with a particular protocol.  I also adapted dumpcap to take a --dump-field-contents arg which dumps the raw value of one or more fields by name, to separate files.  I've tested this by dumping 'image-gif' fields, which dumps decoded GIF streams.  I ended up changing the data type of the value property to String from Array.
+
+=== Processing traffic
+
+Need a solution that will accomodate resolving things like MAC addresses and IP addresses to multiple symbolic names without alot of going back and updating.
+
+Some sort of recursive tagging mechanism, so I can insert a rule that says 'packets with x src MAC address have y hostname.dns property', then any time such a packet is loaded that hostname is appended.
+
+Need multiple layers (MAC->IP->SMB, MAC->IP->DNS), and multiple values per property.
+
+The criteria for applying a rule need to be flexible enough to accomodate namespaces.  '192.168.1.1' will have alot of tags for different networks; we'll need a way to keep them apart.
+
+Also need a way to cache the tag values, since they'll be way too complex to apply on the fly when querying data.
+
+
+=== Data representation
+
+Need to de-normalize somewhat for performance reasons.  Plug-ins will be required to report what columns they require, and maybe use a Rails migration-like scheme to add/remove each plugin's database elements.
+
+==== Tags
+
+Packet objects are tagged with named tags by plugins.  Tags have a name (pluginname.tagname by convention), and zero or more parameters.  Tags are applied to packets directly by plugins, or by rules defined by plugins.
+
+Multiple instances of a tag can be applied to a packet, in which case it has each of the values of the tag's instances.
+
+Plugins register tags by name.  Each named tag is represented by a Ruby object registered by the plugin at load time.  Each tag object handles saving/loading its values from the database.  In most cases tags should be columns in the packet table, but depending upon the data model multiple values may be needed, suggesting a foreign key table.
+
+==== Rules
+
+Rules specify tag(s) and their parameter value(s) which are applied to a packet if it satisfies a rule, usually/always the presence of a particular tag and parameter values.
+
+When a rule is first created, it is also applied to all existing packets which match the rule.  After that, as each new packet is created it is checked against the outstanding rules and all matching rules are applied.
+
+The rule count will easily climb into the hundreds of thousands, and must scale sub-linearly.  Perhaps each tag name can maintain a list of the rules that apply to packets with that tag name.  Still, for tags like ip.src and ip.dst, that will be a huge list.
+
+====
+
+
+=== Plugins
+
+==== Stack
+
+Plug ins are applied in a specific order based on the protocol layer they correspond to.  Plugins expose a property indicating their layer, and can also position themselves before or after certain plugins, or at the start of end of the stack for a given layer.
+
+==== WLAN plugin
+
+Monitors traffic to beacon packets that associate a bssid (hex) and a ssid (text).  Each packet associated with a bssid 'id' is tagged with wlan.bssid(id), and for each ssid a rule is created to associate the ssid of a packet in the wlan.ssid(ssid) tag based on its wlan.bssid tag.
+
+===== Network ID plugin
+
+Sets net.id to some value identifying the network this traffic comes from.  If wlan.bssid is present, uses that.  If I find other values in wired ethernet that would work (maybe vlan?) i'll add those as well.  If there is nothing identifying the network, a net.id(null) value is attached.
+
+Unless noted, all the tags and rules below include as their first value the net.id, which limits the scope of state information to each source network.
+
+It may also be possible later in development to specify a default value for net.id when sucking in traffic captures from multiple sources, to preserve the source information therein even when the captures themselves don't contain network ID information.
+
+==== DNS plugin
+
+Monitors IP traffic, tagging each packet with ip.src(addr) and ip.dest(addr) tags specifying the source and destination address, respectively.  It records DNS lookups for A and CNAME records, and creates rules assigning the ip.src_name(name) and ip.dest_name(name) tags to packets with matching IP addresses.  Creates one rule for each IP address resolved for an IP.
+
+==== SMB plugin
+
+Monitors SMB and NBT traffic, tagging each packet with a smb.src adn smb.dest tags containging the MAC addresses of the source/dest.  If the wlan.bssid tag is present, adds the smb.network(id) tag.  Monitors BROWSE and similar packets and creates rules mapping smb.src and smb.dest tags with smb.src_name and smb.dest_name.  
+
+May tag packets obviously associated with a particular workgroup or domain with smb.workgroup/smb.domain.  If SMB uses numeric IDs like IPs or MAC addresses to denote workgroups or domains, can create rules to resolve these to names.
+
+==== HTTP plugin
+
+Monitors HTTP traffic.  Tags each request with http.id(id), where the 'id' consists of the source IP and port, destination IP and port, name of the resource, and referrer if any [need more for id].  For requests, sets http.host(host) to the value of the Host header, if present, and creates a rule assiging the same tag value to the response with the same http.id(id) value.  For both requests and responses, sets http.resource to the resource.
+
+For responses of content type text/html, parses out a title, sets http.title(title), and creates a rule setting the same for the request with the matching http.id(id).
+
+For requests, sets http.referrer(referrer) to the referrer, and if it's possible to determine the http.id of the referrer, sets that in http.referrer_id(id).  Creates rule to attach the same to the response based on http.id value.
+
+For responses, if the HTTP Content-name header is present, sets http.content_name(name), and creates rule to apply to request as well.
+
+==== Google search plugin
+
+Monitors HTTP traffic for requests that match the pattern of a google search based on the http.host and http.resource tags.  sets google.query(text) to the text of the query.  Creates rule setting google.search_id(id) to the HTTP id of the search request/response, on all requests for pages within the google search results where the HTTP referrer is the google search.  Smart enough to know Google personalized search runs all clicks through a redirect first.
+
+Based on the referrer in HTTP requests, identifies Google search results independent of the above logic, and sets google.query_result(text) on the request packet with the text of the query being matched.  Creates a rule to set the same on the response packet.
+
+==== Chat plugin
+
+Identifies AIM/Yahoo Messenger/MSN Messenger traffic.  Sets chat.conversation(id) to some sort of id for each conversation.  chat.from(screenname) for the sender of a message, chat.to(screenname) for the recipient.  Multiple recipients possible.  Need to flesh out more once the protocols are better understood.
+
+
